@@ -7,7 +7,7 @@
 
 using namespace std;
 
-
+int books;
 
 class base { 
 // Το αντικείμενο βάση έχει μόνο δομικό ρόλο στην βιβλιοθήκη
@@ -22,6 +22,7 @@ public:
 	~base(){
 
 		cout << "Base destruction phase\n " << endl;
+        cout << "Library completely destroyed\n " << endl;
 
 	}
 };
@@ -29,9 +30,9 @@ public:
 class upper_closet_shelf {
   
 public:
-
+  
     upper_closet_shelf(){
-
+        int closet1[100];
 		cout << "Closet shelf under construction\n " << endl;
 
 	}
@@ -47,9 +48,9 @@ public:
 class bottom_closet_shelf {
   
 public:
-
+    
     bottom_closet_shelf(){
-
+        int closet2[100];
 		cout << "Bottom shelf under construction\n " << endl;
 
 	}
@@ -83,9 +84,9 @@ public:
 class upper_shelf {
 
 public:
-
+    
     upper_shelf(){
-
+        int shelf1[100];
 		cout << "Upper shelf under construction\n " << endl;
 
 	}
@@ -101,9 +102,9 @@ public:
 class mid_shelf {
 
 public:
-
+    
     mid_shelf(){
-
+        int shelf2[100];
 		cout << "Mid shelf under construction\n " << endl;
 
 	}
@@ -119,9 +120,9 @@ public:
 class bottom_shelf {
 
 public:
-
+    
     bottom_shelf(){
-
+        int shelf3[10];
 		cout << "Bottom shelf under construction\n " << endl;
 
 	}
@@ -204,8 +205,6 @@ int place_book(){
 ////   
     case 1:
 ////Αν t = 1 τοποθετεί το βιβλίο στο πρώτο ράφι
-    
-    int shelf1[10];
 
     cout << "-------------------------" << endl;
     cout << "Book placed in position 1 - Upper Shelf" << endl;
@@ -216,8 +215,6 @@ int place_book(){
 ////
     case 2:
 ////Αν t = 2 τοποθετεί το βιβλίο στο δεύτερο ράφι
-    
-    int shelf2[10];
 
     cout << "-------------------------" << endl;
     cout << "Book placed in position 2 - Mid Shelf" << endl;
@@ -228,8 +225,6 @@ int place_book(){
 ////
     case 3:
 ////Αν t = 3 τοποθετεί το βιβλίο στο τρίτο ράφι
-    
-    int shelf3[10];
 
     cout << "-------------------------" << endl;    
     cout << "Book placed in position 3 - Lower Shelf" << endl;
@@ -240,8 +235,6 @@ int place_book(){
 ////
     case 4:
 ////Αν t = 4 τοποθετεί το βιβλίο στο πρώτο ράφι του ντουλαπιού   
-    
-    int closet1[10];
 
     cout << "-------------------------" << endl;
     cout << "Book placed in position 4 - Upper Closet Shelf" << endl;
@@ -252,8 +245,6 @@ int place_book(){
 ////
     case 5:
 ////Αν t = 5 τοποθετεί το βιβλίο στο δεύτερο ράφι του ντουλαπιού
-    
-    int closet2[10];
 
     cout << "-------------------------" << endl;
     cout << "Book placed in position 5 - Bottom Closet Shelf" << endl;
@@ -276,7 +267,7 @@ int take_book(){
         case 1:
 ////Αν t = 1 αφαιρεί το βιβλίο απο το πρώτο ράφι      
         cout << "-------------------------" << endl;
-        cout << "Book has been revomed from position 1 - Upper Shelf" << endl;
+        cout << "Book has been removed from position 1 - Upper Shelf" << endl;
         cout << "-------------------------\n" << endl;
 
         break;
@@ -285,7 +276,7 @@ int take_book(){
         case 2:
 ////Αν t = 2 αφαιρεί το βιβλίο απο το δεύτερο ράφι      
         cout << "-------------------------" << endl;
-        cout << "Book has been revomed from position 2 - Mid Shelf" << endl;
+        cout << "Book has been removed from position 2 - Mid Shelf" << endl;
         cout << "-------------------------\n" << endl;
 
         break;
@@ -294,7 +285,7 @@ int take_book(){
         case 3:
 ////Αν t = 3 αφαιρεί το βιβλίο απο το τρίτο ράφι      
         cout << "-------------------------" << endl;
-        cout << "Book has been revomed from position 3 - Bottom Shelf" << endl;
+        cout << "Book has been removed from position 3 - Bottom Shelf" << endl;
         cout << "-------------------------\n" << endl;
 
         break;
@@ -303,7 +294,7 @@ int take_book(){
         case 4:
 ////Αν t = 4 αφαιρεί το βιβλίο από το πρώτο ράφι του ντουλαπιού
         cout << "-------------------------" << endl;
-        cout << "Book has been revomed from position 4 - Upper Closet Shelf" << endl;
+        cout << "Book has been removed from position 4 - Upper Closet Shelf" << endl;
         cout << "-------------------------\n" << endl;
 
         break;
@@ -312,7 +303,7 @@ int take_book(){
         case 5:
 ////Αν t = 5 αφαιρεί το βιβλίο από το δεύτερο ράφι του ντουλαπιού
         cout << "-------------------------" << endl;
-        cout << "Book has been revomed from position 5 - Bottom Closet Shelf" << endl;
+        cout << "Book has been removed from position 5 - Bottom Closet Shelf" << endl;
         cout << "-------------------------\n" << endl;
 
         break;
@@ -332,9 +323,8 @@ int construct_destruct(){
     //εδώ η διαδικασία δημιουργίας των βιβλίων
 
     // δημιουργούμε όσα αντικείμενα book θέλουμε 
-    book obj01;
-    book obj02;
-    //book obj03;
+
+    std::vector<book> v( books );
 
     cout << "Books have been configured "  << endl; 
     cout << "-------------------------\n" << endl;
@@ -362,11 +352,10 @@ int construct_destruct(){
     //εδώ η κλήση της κλάσης bottom_shelf για δημιουργ΄΄ια
     bottom_shelf obj7;
 
-    cout << " Library finished construction\n " << endl;
+    cout << "Library finished construction\n " << endl;
     // Η βιβλιοθήκη κατασκευάστηκε
     
     //Εδώ ξεκινάει η διαδικασία τοποθέτησης και αφαίρεσης των βιβλίων από τη βιβλιοθήκη
-    int books = 2;
     
     for ( int m = 0; m < books; m++ ){
         place_book();
@@ -381,7 +370,8 @@ int construct_destruct(){
 
 int main(){
     
-
+    cout << "Please enter a value of books from 1 to 100: \n " << endl;
+    cin >> books;
     construct_destruct();
 
     return 0;
