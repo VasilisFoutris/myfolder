@@ -370,7 +370,7 @@ int construct_destruct(){
 
 int main(){
     
-    cout << "Please enter a value of books from 1 to 100: " << endl;
+    cout << "Please enter a value of books from 1 to 100: \n " << endl;
     cin >> books;
     construct_destruct();
 

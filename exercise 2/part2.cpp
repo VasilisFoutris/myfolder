@@ -44,19 +44,38 @@ class bank{
 
 };
 
+int curr_serving(){
+
+}
+
+int enter(){
+
+}
+
+int serve(){
+    
+}
 
 int construct_destruct(){
 
     bank obj1;
+
     cashier obj2;
+
+    cashier obj3;
+
+    cashier obj4;
+
+    cashier obj5;
+
+    cashier obj6;
     
-
-
-return true;
+    return true;
 }
 
 int main(){
     
     construct_destruct();
 
+    return 0;
 }
