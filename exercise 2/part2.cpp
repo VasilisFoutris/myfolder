@@ -17,19 +17,19 @@ class cashier{
 
         int is_open();
 
-        void open();
+        int open();
 
-        void close();
+        int close();
 
-        void serve();
+        int serve();
     
         int is_free();
 
-        void free();
+        int free();
 
-        void open_flag();
+        int open_flag();
         
-        void serving_flag();
+        int serving_flag();
 
         ~cashier();
 
@@ -47,16 +47,51 @@ cashier::cashier( int customers ){
     
     cust = customers;
     customers_served = 0;
+        
+    int last_customer = 1;
+    int first_paper = 1; 
     
-    open();
-    open_flag();
-    serve();
-    serving_flag();
-    free();
-    customers_served++;
+    cout << "\nCustomers:" << endl;
+    cin >> customers ;
+    
+    last_customer = customers;
+
+    
+    
+        
+
+        
+    
+
+   
+
+    cout << "\n" << endl;
+    cout << "-------------------------" << endl;
+    cout << "First paper is : " << first_paper << endl;
+    cout << "\n" << endl;
+
+    for( int curr_serving = 1; curr_serving <= last_customer; curr_serving++ ){
+        
+        
+        open();
+        open_flag();
+        cout << "-------------------------" << endl;
+        cout << "Currently serving number: " << curr_serving << endl;
+        cout << "-------------------------" << endl;
+        cout << "\n" << endl;
+
+        serve();
+        serving_flag();
+        free();
+        customers_served++;
+
+    }
+    cout << "-------------------------" << endl;
     cout << "Customers served:"<< customers_served << endl;
+    cout << "\n" << endl;
 
     close();
+    
 }
 
 cashier::~cashier(){
@@ -67,56 +102,62 @@ cashier::~cashier(){
 
 
 
-void cashier::open(){
+int cashier::open(){
 
     cout << "Cashier is open!\n" << endl;
 
+    return 0;
 }
 
 int cashier::is_open(){
 
 
-  return 1;
+  return 0;
 }
 
-void cashier::close(){
+int cashier::close(){
 
     cout << "Cashier is closed!\n" << endl;
 
+    return 0;
 }
 
-void cashier::serve(){
+int cashier::serve(){
 
     cout << "Cashier is serving!\n" << endl;
 
+    return 0;
 }
 
-void cashier::free(){
+int cashier::free(){
 
     cout << "Cashier is free!\n" << endl;
-
+    
+    return 0;
 }
 
 int cashier::is_free(){
 
+    cout << "Free cashier found!\n "<< endl;
 
-
-    return 1;
+    return 0;
 }
 
-void cashier::open_flag(){
+int cashier::open_flag(){
 
-    if( is_open ){
+    if( is_open() == true ){
 
         cout << "Cashier open\n" << endl;
         open();
         
     }
+    
+    return 0;
 }
 
-void cashier::serving_flag(){
+int cashier::serving_flag(){
 
-    if( is_free ){
+    if( is_free() == true ){
 
         free();
 
@@ -124,9 +165,12 @@ void cashier::serving_flag(){
     else{
 
         cout << "Cashier currently serving another customer\n" << endl;
-        
+
+        cout << "Cashier finished serving current number\n\n" <<  endl;
+
     }
 
+    return 0;
 }
 
 class bank{
@@ -161,25 +205,32 @@ class bank{
 
 
 bank::bank( int customers ) : cashier1 ( customers ), cashier2 ( customers ), cashier3( customers ), cashier4( customers ), cashier5( customers ) {
-    
-    int last_customer = 1;
-    int first_paper = 1; 
 
-    cout << "\nCustomers:" << endl;
-    cin >> last_customer ;
-
-    cout << "\n" << endl;
-    cout << "-------------------------" << endl;
-    cout << "First paper is : " << first_paper << endl;
-    cout << "\n" << endl;
-
-    for( int curr_serving = 1; curr_serving <= last_customer; curr_serving++ ){
+    cout << "Bank under construction\n " << endl;
+    int t;
+    for( int i = 0; i < 5; i++ ){
         
-        cout << "Currently serving: " << curr_serving << endl;
-        cout << "\n" << endl;
-
+        t = rand() % 5 + 1;
     }
+    
+    switch (t){
 
+        case 1:
+
+            break;
+        case 2:
+
+            break;
+        case 3:
+
+            break;
+        case 4:
+
+            break;
+        case 5:
+
+            break;
+    }
 }
 
 int bank::curr_serving( int customers ){
@@ -222,7 +273,9 @@ int main(){
     
     int n;
 
-    bank b1(10);
+    srand ( time ( NULL ) );
+
+    bank b1(5);
 
     return 0;
 }
