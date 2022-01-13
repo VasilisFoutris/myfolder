@@ -32,7 +32,7 @@ class cashier{
 
         bool is_free(){ return free_flag; };
 
-        ~cashier();
+        //~cashier();
 
 //    private:
 //
@@ -49,13 +49,7 @@ cashier::cashier( int custs = 0 ){
     open_flag = false;
     free_flag = true;
     customers_served = 0;
-    
-}
-
-cashier::~cashier(){
-    
-    cout << "Cashier has been destroyed\n" << endl;
-
+    cout << "Cashier under construction\n " << endl; 
 }
 
 void cashier::open(){
@@ -115,7 +109,7 @@ void cashier::free(){
         free_flag = true;
         customers_served++;
 
-        if( customers_served = C ){
+        if( customers_served == C ){
             
             close();
             cout << "Cashier max workrate achieved!\n " << endl;
@@ -131,6 +125,11 @@ void cashier::free(){
     } 
 }
 
+//cashier::~cashier(){
+//    
+//    cout << "Cashier has been destroyed\n" << endl;
+//
+//}
 
 class bank{
 
@@ -138,10 +137,11 @@ class bank{
     int curr_serving;
     int K;
     int last_cashier;
+    cashier* cashiers;
 
     public:
     
-        bank( int cust , int F );
+        bank( int N , int K );
 
         void open( int cashier_num );
 
@@ -149,7 +149,7 @@ class bank{
 
         int open_cashier();
 
-        bool chack_to_open();
+        bool check_to_open();
 
         bool check_to_close();
 
@@ -165,7 +165,7 @@ class bank{
 
     private:
 
-    cashier cashiers[5];
+    
 
 };
 
@@ -175,9 +175,9 @@ bank::bank( int cust, int Fo ){
     last_customer = 1;
     curr_serving = 1;
     K = Fo;
-    
     last_cashier = 0;
-    
+    cashiers = new cashier[5];
+
     for( int i = 0; i < 5; i++ ){
 
         cashiers[i] = cashier( cust );
@@ -224,9 +224,9 @@ int bank::open_cashier(){
 
 }
 
-bool bank::chack_to_open(){
+bool bank::check_to_open(){
 
-    cout << "Currently in queue: " << waiting_customers << "  " << "Currently open cashiers : " << ( open_cashier() * K ) << endl;
+    cout << "Currently in queue: " << waiting_customers() << "  " << "Currently open cashiers : " << ( open_cashier() * K ) << endl;
 
     cout << "\n" << endl;
 
@@ -247,60 +247,74 @@ int bank::waiting_customers(){
 
 int bank::enter(){
 
-    if( chack_to_open() ){
-
-        curr_serving++;
+    if( !check_to_open() ){
+        
+        last_customer++;
+        return true;
 
     }
 
     else{
-
-        if ( open_cashier() == 5 ){
-
-            cout << "Sorry you cannot enter until some customers are serverd!\n " << endl; 
-
-        }
         
-        for( int i = 0; i < 5; i++ ){
+        bool opened=false;
+        
+        for (int i = 0; i < 5; i++){
 
             if( !cashiers[i].is_open() ){
-
-                open_cashier();
+                
+                open(i);
+                opened = true;
+                last_customer++;
                 break;
 
             }
+        }
+        if( !opened ){
+        
+            return false;
+        }
 
-        }    
+        return true;
 
     }
 
-    return 0;
 }
+
 
 int bank::serve(){
 
-    if( open_cashier() == 0 ){
-
-        open( 0 );
-        last_cashier = 0;
+    int current_cashier=0;
+    
+    if(open_cashier() ==0 ){
+        open(0);
+        current_cashier=0;
+        last_cashier=0;
+    }
+    else{
         
-    }
-    
-    for( int i = last_cashier + 1; i <= last_cashier + 5; i++ ){
+        bool found=false;
+        
+        for (int a = 0; a < 5; a++){
+            int i=(last_cashier+(i+1))%5;
 
-        if( cashiers[ i % 5 ].is_open() ){
-
-            last_cashier = ( i % 5 );
-            break;
-
+            if(cashiers[i].is_open() && cashiers[i].is_free()){
+                last_cashier=i;
+                current_cashier=i;
+                found=true;
+                break;
+            }
         }
-
+        if(!found){
+            cout<<"No open and free cashier!\n";
+        }
     }
-
-    cashiers[ last_cashier ].serve();    
     
-    cout << "Custom" << endl; 
-
+    cout<<"Customer no: "<< curr_serving <<" by cashier no: "<< current_cashier <<"\n";
+    cashiers[current_cashier].serve(); 
+    cashiers[current_cashier].free();
+    
+    exit();
+    return 0;
 }
 
 int bank::exit(){
@@ -308,16 +322,21 @@ int bank::exit(){
     curr_serving++;
 
     if( check_to_close() ){
-
         for ( int i = 0; i < 5; i++ ){
 
+            if( cashiers[i].is_open() && cashiers[i].is_free() ){
 
+                close(i);
+                break;
 
-        }  
-         
+            }
+
+        }
+
     }
 
     return 0;
+
 }
 
 
@@ -327,13 +346,55 @@ bank::~bank (){
 
 }
 
-int main(){
+int main( int argc, char *argv[] ){
     
-    int n;
+    if( argc != 5 ){
+        
+        cout << "Error\n " << endl;
+        return 1;
 
-    srand ( time ( NULL ) );
+    }
 
-    bank b1(5 , 5);
+    int K = stoi ( argv[1] ) ;
+    int M = stoi ( argv[2] ) ;
+    int N = stoi ( argv[3] ) ;
+    int L = stoi ( argv[4] ) ;
 
+    bank b1( N , K );
+
+    int waiting_to_be_served = 0;
+
+    for (int i = 0; i < M; i++){
+
+        for (int a = 0; a < N; a++){
+            
+            if(!b1.enter()){
+
+                waiting_to_be_served++;
+
+            }
+
+        }
+
+        for (int a = 0; a < N; a++){
+
+            if( b1.waiting_customers() ==0 ){
+
+                break;
+            }
+
+            b1.serve();
+
+        }
+        
+    }
+
+    for (int i = 0; i < waiting_to_be_served; i++){
+
+        b1.enter();
+        b1.serve();
+    }
+    
     return 0;
+
 }
