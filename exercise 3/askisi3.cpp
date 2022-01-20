@@ -17,9 +17,9 @@ class creature{
 
         void print( int L );
 
-        virtual void is_a_good( creature v, int L );
+        virtual bool is_a_good();
 
-        virtual void is_a_zombie( creature v, int L );
+        virtual void is_a_zombie();
 
         void bless( creature v, int L );
 
@@ -52,24 +52,23 @@ creature::creature( string s1, int L, int N ){
     name = s1;
     remaining_life = L;
 
-    //print();
-
 }
 
-void creature::is_a_good( creature v, int L ){
-//πρεπει να γινει virtual συναρτηση και οταν θα γινεται override στα καλα πλασματα θα επιστρεφει true
-//ενω στα κακα πλασματα θα επιστρεφει false
-    if ( L != 0 ){
+bool creature::is_a_good(){
+
+    if ( remaining_life != 0 ){
         
         cout << "This creature is good for now!\n " << endl;
 
     }
 
+    return true;
+
 }
 
-void creature::is_a_zombie( creature v, int L ){
+void creature::is_a_zombie(){
 
-    if( L = 0 ){
+    if( remaining_life = 0 ){
 
         cout << "This creature turned into zombie!\n " << endl;
         
@@ -127,19 +126,37 @@ class good_creature : public creature{
 
         void clone();
 
+        bool check_is_a_good();
+
         void print();
 
         ~good_creature();
+
+        good_creature();
 
     private:
     
 };
 
-good_creature::good_creature(){
+good_creature::good_creature() : creature() {
+
+}
+
+bool good_creature::check_is_a_good(){
+
+    if( is_a_good() ){
+
+        return true;
+
+    }
+
+    return true;
 
 }
 
 void good_creature::clone(){
+
+    //delete [] cre;
 
 }
 
@@ -148,6 +165,8 @@ void good_creature::print(){
 }
 
 good_creature::~good_creature(){
+
+    //delete [] cre;
 
 }
 
@@ -159,19 +178,37 @@ class bad_creature : public creature {
 
         void clone();
 
+        bool check_is_a_good();
+
         void print();
 
         ~bad_creature();
+
+        bad_creature();
 
     private:
 
 };
 
-bad_creature::bad_creature( ){
+bad_creature::bad_creature() : creature() {
+
+}
+
+bool bad_creature::check_is_a_good(){
+
+    if( is_a_good() ){
+
+        return false;
+
+    }
+
+    return false;
 
 }
 
 void bad_creature::clone(){
+
+    //delete [] cre ;
 
 }
 
@@ -203,12 +240,30 @@ class creature_society : public creature {
     private:
 
         int members;
-        good_creature gc;
-        bad_creature bc;
+        creature** cre;
 
 };
 
 creature_society::creature_society( int N ){
+
+    cre = new creature*[ N ];
+
+    for( int i = 0; i < N; i++ ){
+
+        int ra = ( rand() % 2 );
+
+        if( ra ){
+
+            cre[i] = new good_creature();
+
+        }
+        else{
+
+            cre[i] = new bad_creature();
+
+        }
+
+    }
 
 }
 
@@ -218,14 +273,35 @@ void creature_society::clone_next(){
 
 void creature_society::clone_zombies(){
 
+
+
 }
 
 void creature_society::print(){
 
+    //if ( cre ){
+       
+        //cout << "Good dominates in the world!\n " << endl; 
+
+    //}
+
+    //if ( cre ){
+        
+        //cout <<  "This is a dead society\n " << endl;
+
+    //}
+    
+    //else{
+        
+        //cout << "Try again to improve the world\n " << endl;
+
+    //}
 
 }
 
 creature_society::~creature_society(){
+
+    //delete [] cre;
 
 }
 
@@ -409,11 +485,18 @@ int main( int argc, char *argv[] ){
 
     }
 
-        for( int j = 0; j < N; j++ ){
+    for( int j = 0; j < N; j++ ){
         
-            v[j].print_life();
+        v[j].print_life();
 
-        }
+    }
+
+    cs.print();
+
+    for( int i = 0; i < N; i++ ){
+
+    }
+
 
     
 // με τον ποιντερ this θα κανεις το σημειο που ζηταει να σβηνεις καποιο στοιχειο απο τον πινακα και να κλωνοποιεις τα αλλα
