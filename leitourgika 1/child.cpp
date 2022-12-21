@@ -25,11 +25,9 @@ using namespace std;
 
 int main(int argc, char *argv[]){
     cout << "Starting Child operations\n" << endl;
-    clock_t t;
     int sem_fd;
     key_t sem_key;
     int sem_id;
-    int i;
     struct sembuf sop;
 
     // Total time for N requests to server
@@ -88,39 +86,11 @@ int main(int argc, char *argv[]){
 	}
 
 	cout << "Shared memory segment with id " << shmid << " attached at " << &shared_memory << "\n" << endl;
-
-    //int requests = 0;
-    //while(requests < childrequests){
-    //
-    //    // Rand seed and generate random line
-    //    unsigned int curtime = time(NULL);
-    //    srand((unsigned int) curtime - getpid());
-    //    int line = rand() % linenum + 1;
-    //
-    //    // Write to shared memory segment
-    //    shared_memory->line = line;
-    //
-    //    t = clock();    // Begin timing
-    //
-    //    // End timing
-    //    t = clock() - t;    
-    //    sum_time += t;
-    //    
-    //    requests++;
-    //    if(requests == childrequests){
-    //        shared_memory->completed = 1;
-    //    
-    //    }
-    //}
     
-    for (i = 0; i < requestPerchild ; ++i) {
+    for (int i = 0; i < requestPerchild ; ++i) {
         
         cout << "Starting Child" << endl;
         
-        //Rand seed and generate random line
-        //unsigned int curtime = time(NULL);
-        //srand((unsigned int) curtime - getpid());
-        //int line = rand() % n + 1;
         int line = rand() % numberOfsegments + 1;
 
         sop.sem_num = line;
@@ -128,8 +98,8 @@ int main(int argc, char *argv[]){
         sop.sem_flg = SEM_UNDO;
 
         cout << "Client # "<< getpid() << " waiting" << endl ;
-        semop( sem_id, &sop, 1 );
-
+        //semop( sem_id, &sop, 1 );
+        //cout<<"test"<<endl;
         cout << "Client # "<< getpid() << " acquired. Round "<< i+1 << " of " << requestPerchild << ". Sleeping" << endl;
         sleep(0.2);
         cout << "Client # "<< getpid() << " releasing" << endl;
@@ -147,14 +117,11 @@ int main(int argc, char *argv[]){
    
     }
 
-    //double time_taken = ((double)sum_time)/CLOCKS_PER_SEC; // calculate the total elapsed time
-    //printf("Child %d waited on average %.15lf seconds for server response\n", getpid(), time_taken/childrequests);
     cout << "Child finishing" << endl;
     sop.sem_num = 0;
     sop.sem_op = +1;
     sop.sem_flg = IPC_NOWAIT;
     semop(sem_id, &sop, 1);
-
 
     exit(0);
 

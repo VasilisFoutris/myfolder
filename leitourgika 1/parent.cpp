@@ -31,7 +31,6 @@ int main( int argc, char *argv[] ){
     int linenum;
     int counter;
     int childrequests;
-    int i;
     int requests_per_child;
     struct sembuf sop;
 
@@ -62,14 +61,15 @@ int main( int argc, char *argv[] ){
         string inputFile = argv[3];
         childrequests = stoi( requestStr );
         string requestPerchild = argv[4];
-        requests_per_child = stoi ( requestPerchild);
+        requests_per_child = stoi ( requestPerchild );
        
         char const *linenum_char = linenumstr.c_str();
-        cout << linenum_char << "linenum_char" << endl;
+        //cout << linenum_char << " linenum_char" << endl;
         char const *request_char = requestStr.c_str();
-        cout << request_char << "linenum_char" << endl;
+        //cout << request_char << " request_char" << endl;
         char const *requestPerchild_char = requestPerchild.c_str();
-        cout << requestPerchild_char << "linenum_char" << endl;
+        //cout << requestPerchild_char << "requestPerchild_char" << endl;
+        
 
 
         // Open the file for reading
@@ -171,8 +171,9 @@ int main( int argc, char *argv[] ){
         cout << number_of_segments << " number of segments" << endl;
         
         // Create the semaphore
-        sem_id = semget( sem_key, number_of_segments - 1, IPC_CREAT | 0600 );
-        cout << sem_id << endl;
+        sem_id = semget( sem_key, number_of_segments , IPC_CREAT | 0600 );
+        //cout << sem_id << endl;
+
         if ( sem_id < 0 ) {
 
             perror("Could not create sem");
@@ -184,9 +185,9 @@ int main( int argc, char *argv[] ){
         semctl( sem_id, 0, SETVAL, 0 );
 
         for ( int i = 1; i < number_of_segments + 1; i++) {
-                
-            if ( semctl( sem_id, i, SETVAL, 1 ) < 0 ) {
-                cout << i << endl;
+                //cout << i << endl;
+            if ( semctl( sem_id, 0, SETVAL, 1 ) < 0 ) {
+                //cout << i << endl;
                 perror("Could not set value of semaphore");
                 exit(4);
 
@@ -194,29 +195,34 @@ int main( int argc, char *argv[] ){
 
         }
 
+       std::string number_Of_segments = std::to_string(number_of_segments);
+       char const *number_Of_Segments = number_Of_segments.c_str();
+
         // Now create some clients
         // First create the path to the client exec
         getcwd( client_exe, CLIENT_PATH_BUFSIZE );
         dir_len = strlen( client_exe );
         strcpy( client_exe + dir_len, "/child" );
         cout << "\n" << client_exe << endl;
-        for ( i = 0; i < childrequests; ++i ){
+        for ( int i = 0; i < childrequests; ++i ){
             
             if ( ( pid = fork() ) < 0 ){
+
                 perror( "Could not fork, please create clients manually" );
+                
             }
             else if ( pid == 0 ){
 
                 // We're in the child process, start a client
-                cout<< "Creating Child\n" << endl;
-                execl( "child", "child", linenum_char, requestPerchild_char, number_of_segments , (char *)0 );
+                cout<< "Creating Child" << endl;
+                execl( "child", "child", linenum_char, requestPerchild_char, number_Of_Segments , (char *)0 );
                 _exit(127);
 
             }
 
         }
 
-        cout << "\nDone creating clients, sleeping for a while" << endl;
+        cout << "Done creating clients, sleeping for a while" << endl;
         //sleep(1);
         cout << "Increasing sem count\n" << endl;
         // Wait for all children to finish
@@ -227,12 +233,13 @@ int main( int argc, char *argv[] ){
         while( return_code == -1 ){
                      
             sop.sem_num = index;
-            sop.sem_op = -1;
+            sop.sem_op = +1;
             sop.sem_flg = IPC_NOWAIT;
             //cout << "Client # "<< getpid() << " waiting\n" << endl ;
             return_code = semop(sem_id, &sop, 1);
             prev_index = index;
-
+            //cout << index << endl;
+            
             if ( index == number_of_segments ){
 
                 index = 1;
@@ -244,11 +251,11 @@ int main( int argc, char *argv[] ){
                 index++;
 
             }
-            
+            //cout << index << endl;
             sleep(0.2);
 
             sop.sem_num = prev_index;
-            sop.sem_op = +1;
+            sop.sem_op = -1;
             sop.sem_flg = IPC_NOWAIT;
             //cout << "Client # "<< getpid() << " waiting\n" << endl ;
             return_code = semop(sem_id, &sop, 1);
